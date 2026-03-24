@@ -56,4 +56,6 @@ Once all components are available, the next steps will include:
 * Possible improvements to the robot logic, including artificial intelligence features
 
 
-If you want, I can also add sections like installation, usage, or a more professional GitHub structure.
+
+
+
