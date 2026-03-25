@@ -1,10 +1,10 @@
-Mechanical Design and Development Status
+##Mechanical Design and Development Status
 
 As of March 25, 2026, the PTC Creo application is currently not operational due to a licensing issue. The software indicates that the UVic license has expired, temporarily preventing further design work within the platform.
 
 Despite this setback, significant progress has already been made in the mechanical design of the project using PTC Creo.
 
-Designed Components
+##Designed Components
 
 So far, the main structure of the Connect Four board has been designed and validated through multiple iterations and testing phases.
 
@@ -24,7 +24,7 @@ The supporting legs of the structure include two types of fittings:
 
 This bottom cover acts as a stopper when the pieces are dropped into the board. Additionally, it can be slid open, allowing all the pieces to be easily released and the board to be emptied.
 
-Mechanism Development
+##Mechanism Development
 
 The design of the support structure and the piece dispensing mechanism has already started. However, progress has been slightly delayed due to the late arrival of materials, which were received on March 24, 2026.
 
