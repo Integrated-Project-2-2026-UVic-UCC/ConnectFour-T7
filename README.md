@@ -101,7 +101,6 @@ graph TD
 | Stepper driver | Motor driver for step/direction control | ✅ Ready |
 | Lead screw (husillo) | Linear X-axis mechanism | ✅ Ready |
 | Linear guide + carriage | Supports and guides the dispenser | ✅ Ready |
-| 3D-printed dispenser | Holds piece stack; mounted on lead screw nut and carriage | ✅ Printed |
 | Micro servo | Releases one piece at a time from the dispenser | ✅ Tested |
 | Photoelectric sensors | 7× emitter-receiver pairs, one per column, in dedicated holes at the top of the board | ✅ Tested |
 | Series resistors | Required for correct photoelectric sensor detection | ✅ Installed |
