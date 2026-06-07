@@ -41,9 +41,8 @@ The robot does not use an artificial intelligence engine. Instead, it follows a 
 ---
 
 ## How It Works
-
-```
 <div align="center">
+```
 Human drops a piece
         │
         ▼
