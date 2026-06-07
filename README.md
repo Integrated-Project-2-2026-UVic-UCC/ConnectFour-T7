@@ -19,12 +19,10 @@
 
 - [About the Project](#about-the-project)
 - [How It Works](#how-it-works)
-- [System Architecture](#system-architecture)
 - [Mechanical Design](#mechanical-design)
 - [Electronics](#electronics)
 - [Software](#software)
 - [Hardware Components](#hardware-components)
-- [Repository Structure](#repository-structure)
 - [Getting Started](#getting-started)
 - [Current Status](#current-status)
 - [Team](#team)
