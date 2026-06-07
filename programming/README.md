@@ -1,60 +1,80 @@
-
 ## Project Description
 
-This project implements the control code of a robot capable of playing the Connect Four game. At the current stage of development, the program mainly acts as the “brain” of the robot, responsible for decision-making and game management.
+This project implements the control software for a robot capable of playing the Connect Four game. The program acts as the robot's control system, managing the game logic, player interaction, and the robot's decision-making process.
 
-The system allows a complete simulation of a match between the player and the robot, handling turns, validating moves, and determining the final result (win, loss, or draw).
+The system allows a complete game between the player and the robot by validating moves, managing turns, and determining the final result (win, loss, or draw).
+
+## Project Structure
+
+During the development process, the project was divided into three main parts:
+
+1. Robot decision-making
+2. Player interaction
+3. Mechanical control and piece launching
+
+In the final version, the implementation of an artificial intelligence system was not considered necessary. Instead, the robot follows a predefined logical strategy to make its decisions.
 
 ## Code Functionality
 
-The code is structured to control a 6-row by 7-column matrix that represents the game board. The main functionalities include:
+The code manages a 6-row by 7-column matrix that represents the game board. The main functionalities include:
 
-* Initialization of the board with empty positions
+* Board initialization
 * Management of player and robot moves
-* Validation of moves to ensure columns are not full
+* Validation of moves to ensure that columns are not full
 * Detection of winning conditions (horizontal, vertical, and diagonal)
 * Detection of draw situations when the board is full
 
 ## Robot Decision Logic
 
-The robot follows a basic decision-making strategy based on three levels:
+The robot follows a simple three-step strategy:
 
-1. Attempt to win by checking if there is a move that leads to an immediate victory
+1. Check for an immediate winning move
 2. Block the player if they are about to win
 3. Select a random available column if no better option is found
 
-At this stage, no advanced artificial intelligence system has been implemented.
-
 ## Player Interaction
 
-The system includes interaction through the serial interface, allowing:
+The LCD display originally planned for the project was not implemented. Instead, all communication with the player is performed through the computer's Serial Monitor.
 
-* Selection of which player starts the game
-* Input of player moves
-* Display of messages during the game
-* Option to restart the game after it ends
+The serial interface allows the user to:
 
-In future versions, this interaction is planned to be implemented using an LCD screen.
+* Select which player starts the game
+* Enter player moves
+* Display game status messages
+* Restart the game after a match ends
+
+## Sensor and Mechanical Testing
+
+Several tests were carried out to validate the operation of the photoelectric sensors. Although the sensors work correctly in most situations, occasional detection failures were observed.
+
+For this reason, the development process was divided into several independent test programs:
+
+* Sensor testing code
+* Stepper motor movement testing code
+* Servo-based piece launching testing code
+* Main logic code that integrates player interaction and the robot's decision-making strategy
+
+## Final Implementations
+
+Two final versions of the system were developed:
+
+### Automatic Detection Mode
+
+In this version, the player's move is detected automatically by a photoelectric sensor, which identifies the column where the piece has been dropped. The robot then analyzes the board and performs its move according to the predefined logic.
+
+### Manual Input Mode
+
+Since the sensors may occasionally fail, a backup version was also developed. In this mode, the player enters the column number through the Serial Monitor after each move. The robot then updates the board, analyzes the game state, and performs its move using the same logical decision-making process.
 
 ## Current Project Status
 
-The project is currently in an intermediate development phase:
+The project has reached a functional state where:
 
-* The code mainly focuses on game logic and robot decision-making
-* Motor testing is currently in progress
-* The system is waiting for the arrival of photoelectric sensors
-* Mechanical development is being carried out in parallel, especially the piece launching mechanism
-
-## Future Work
-
-Once all components are available, the next steps will include:
-
-* Final system assembly
-* Integration of sensors for piece detection
-* Adjustment and optimization of motor movements for accurate piece launching
-* Implementation of an LCD-based interface
-* Possible improvements to the robot logic, including artificial intelligence features
-
+* The robot can play a complete game of Connect Four
+* Player interaction is managed through the Serial Monitor
+* The mechanical launching system has been tested
+* Sensor detection has been implemented and evaluated
+* A backup manual mode ensures reliable operation even if the sensors fail
 
 
 
