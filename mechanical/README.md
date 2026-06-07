@@ -1,5 +1,3 @@
-# Connect Four Robot – Mechanical Design
-
 ## Project Description
 This repository contains the mechanical design of a robot capable of playing the Connect Four game. The mechanical system provides the physical structure of the game board and the mechanism responsible for storing, positioning, and dropping the playing pieces into the correct column.
 
