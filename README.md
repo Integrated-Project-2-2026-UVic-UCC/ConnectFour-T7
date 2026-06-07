@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🤖 Autonomous Connect 4 Machine
+# Autonomous Connect 4 Machine
 ### Integrated Project II · Mechatronics Engineering · UVic-UCC 2026
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
@@ -9,140 +9,142 @@
 [![Status: Integration & Testing](https://img.shields.io/badge/Status-Integration%20%26%20Testing-yellow)]()
 [![University: UVic-UCC](https://img.shields.io/badge/University-UVic--UCC-darkgreen)]()
 
-*A fully autonomous physical Connect 4 machine: the ESP32 detects each piece drop via photoelectric sensors, computes the best move, and physically delivers the piece using a motorized lead screw dispenser.*
+*A fully autonomous physical Connect 4 machine: the ESP32 detects each piece drop with photoelectric sensors, decides the best move, and physically delivers the piece using a motorized lead screw dispenser.*
 
 </div>
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
-- [About the Project](#-about-the-project)
-- [How It Works](#-how-it-works)
-- [System Architecture](#-system-architecture)
-- [Hardware Components](#-hardware-components)
-- [Software Stack](#-software-stack)
-- [Repository Structure](#-repository-structure)
-- [Getting Started](#-getting-started)
-- [Current Status](#-current-status)
-- [Team](#-team)
-- [License](#-license)
+- [About the Project](#about-the-project)
+- [How It Works](#how-it-works)
+- [System Architecture](#system-architecture)
+- [Mechanical Design](#mechanical-design)
+- [Electronics](#electronics)
+- [Software](#software)
+- [Hardware Components](#hardware-components)
+- [Repository Structure](#repository-structure)
+- [Getting Started](#getting-started)
+- [Current Status](#current-status)
+- [Team](#team)
+- [License](#license)
 
 ---
 
-## 🎯 About the Project
+## About the Project
 
 This project is developed as part of **Integrated Project II** in the **Mechatronics Engineering** degree at the Universitat de Vic – Universitat Central de Catalunya (UVic-UCC).
 
-The goal is to build a machine that plays **Connect 4 autonomously** against a human opponent. The machine detects the human's move through **photoelectric sensors**, decides which column to play, moves a **3D-printed piece dispenser** along a lead screw to the correct position, and drops a piece using a **servo motor** — all controlled by an **ESP32**.
+The goal is to build a machine that plays **Connect 4 autonomously** against a human opponent. The machine detects the human's move through **photoelectric sensors**, decides which column to play, moves a **3D-printed piece dispenser** along a lead screw to the correct position, and drops a piece with a **servo motor** — all controlled by an **ESP32**.
+
+The robot does not use an artificial intelligence engine. Instead, it follows a predefined logical strategy: win if possible, block the opponent, or otherwise play an available column. All game communication is handled through the **Serial Monitor**.
 
 ---
 
-## ⚙️ How It Works
+## How It Works
 
 ```
 Human drops a piece
         │
         ▼
-Photoelectric sensor (1 per column)
+Photoelectric sensor (one per column)
 detects the piece passing through
         │
         ▼
 ESP32 updates the board state
         │
         ▼
-Software selects the best column to play
+Software selects the column to play
+(win > block > random available column)
         │
         ▼
 Stepper motor moves the dispenser
-along the lead screw to target column
+along the lead screw to the target column
         │
         ▼
-Endstop used for homing / position reference
-        │
-        ▼
-Servo motor releases one piece
-from the dispenser stack
+Servo motor pushes the ramp and releases one piece
         │
         ▼
 Piece falls into the board
         │
         ▼
-LCD displays game state (e.g. "Game Over")
+Game state shown through the Serial Monitor
 ```
 
-> ♻️ **Note:** Piece recovery and board reset are performed manually between games.
+> **Note:** Piece recovery and board reset are performed manually between games.
 
 ---
 
-## 🏗 System Architecture
+## Mechanical Design
 
-```mermaid
-graph TD
-    A[Human Player] -->|Drops piece| B[Photoelectric Sensors\n7× — one per column]
-    B -->|Column detected| C[ESP32\nGame logic & control]
-    C -->|Move decision| D[Stepper Motor Driver]
-    D -->|Step pulses| E[Stepper Motor\nLead screw X-axis]
-    E -->|Moves carriage| F[3D-printed Dispenser\nmounted on lead screw nut\n+ linear guide]
-    C -->|PWM signal| G[Servo Motor\ninside dispenser]
-    G -->|Releases piece| H[Connect 4 Board\n7 × 6 grid]
-    C -->|Status messages| I[LCD Display]
-    J[Endstop / Limit Switch] -->|Homing reference| C
-```
+The mechanical design is organized into two main assemblies, all modeled in PTC Creo, exported as STL for 3D printing, and documented with technical drawings.
 
----
+**Board structure assembly** — represents the game board and holds the structure upright:
+- **Foot L** and **Foot R** — the two legs of the structure
+- **Bottom Cover** — closes the structure and assembles onto the base
+- **Connect 4** — the main board frame with the 7 × 6 grid of columns
+- **Connect 4 Cover** — the front cover that closes the playing grid
 
-## 🔧 Hardware Components
+**Dispenser and linear-motion assembly** — carries and releases the pieces:
+- **Support Foot** and **Dispenser Support Bar** — hold the dispenser in place
+- **Motor Support** — holds the stepper motor at one end of the lead screw
+- **Bearing Support** — holds the bearing at the opposite end of the lead screw
+- **Dispenser Part 1** and **Dispenser Part 2** — form the dispenser body
 
-| Component | Description | Status |
-|-----------|-------------|--------|
-| ESP32 | Main microcontroller — game logic, motor & sensor control | ✅ Ready |
-| Stepper motor | X-axis movement via lead screw | ✅ Tested |
-| Stepper driver | Motor driver for step/direction control | ✅ Ready |
-| Lead screw (husillo) | Linear X-axis mechanism | ✅ Ready |
-| Linear guide + carriage | Supports and guides the dispenser | ✅ Ready |
-| Micro servo | Releases one piece at a time from the dispenser | ✅ Tested |
-| Photoelectric sensors | 7× emitter-receiver pairs, one per column, in dedicated holes at the top of the board | ✅ Tested |
-| Series resistors | Required for correct photoelectric sensor detection | ✅ Installed |
-| Endstop / Limit switch | Homing reference, located at one end of the lead screw | ✅ Ready |
-| LCD display | Shows game status (e.g. "Your turn", "Game Over") | ✅ Ready |
-| Connect 4 board | 7×6 grid with 7 small sensor holes at the top | ✅ Ready |
-
-### 🔍 Sensor detail
-
-Each of the 7 photoelectric sensors is positioned in a dedicated small hole at the **top of the Connect 4 board**, one per column. When a piece passes through the column opening, it breaks the emitter–receiver beam, and the ESP32 registers which column was played. Each sensor is wired in series with a resistor to ensure reliable detection.
+The pieces are stored horizontally inside the dispenser. To drop a piece, an internal ramp reorients it from horizontal to vertical so it falls correctly into the selected column, and a servo motor pushes the ramp downward to release one piece at a time. The whole dispenser slides along the lead screw to align with any of the seven columns.
 
 ---
 
-## 💻 Software Stack
+## Electronics
+
+The electrical system is based on an **ESP32** microcontroller, which manages all inputs and outputs of the robot:
+- Reads the photoelectric (IR) sensors to detect the column played by the human
+- Controls the stepper motor driver to move the dispenser horizontally
+- Activates the servo motor to release a piece
+- Provides the electrical interface between software, sensors, and actuators
+
+The ESP32 works with 3.3 V logic, and an external power supply feeds the stepper motor and servo. All components share a common ground to keep a correct signal reference. The schematic was designed with EasyEDA.
+
+---
+
+## Software
 
 - **Microcontroller:** ESP32
-- **Language:** C++
-- **Framework:** Arduino / ESP-IDF
+- **Language:** C++ (Arduino)
 - **Key modules:**
-  - `detection` — reads photoelectric sensors, maps to column index
-  - `motion` — stepper step generation, homing routine, position control
+  - `detection` — reads photoelectric sensors and maps them to a column index
+  - `motion` — stepper step generation and position control
   - `servo` — piece release timing and control
-  - `game` — board state, win detection, move selection
-  - `display` — LCD output (game status, prompts)
+  - `game` — board state, win/block detection, move selection
+  - `serial` — Serial Monitor communication (prompts and game status)
+
+The board is handled as a 6-row by 7-column matrix. The code initializes the board, manages player and robot moves, validates that columns are not full, and detects winning conditions (horizontal, vertical, and diagonal) as well as draws.
+
+Two final versions of the system are provided:
+- **Automatic Detection Mode** — the player's move is detected automatically by the photoelectric sensors, which identify the played column.
+- **Manual Input Mode** — a backup version where the player enters the column number through the Serial Monitor, in case the sensors fail.
 
 ---
 
-## 📁 Repository Structure
+## Hardware Components
 
-```
-Team7/
-├── documentation/        # Reports, meeting notes, design documents
-├── electronics/          # Schematics, wiring diagrams
-├── mechanical/           # CAD files, 3D-print STLs, technical drawings
-├── programming/          # C++ source code (ESP32)
-├── LICENSE
-└── README.md
-```
+| Component | Description | 
+|-----------|-------------|
+| ESP32 | Main microcontroller — game logic, motor and sensor control |
+| NEMA17 stepper motor | X-axis movement via lead screw |
+| Stepper driver | Motor driver for step/direction control |
+| Lead screw | Linear X-axis mechanism |
+| Linear guide + carriage | Supports and guides the dispenser |
+| 9g micro servo | Releases one piece at a time from the dispenser |
+| Photoelectric / IR sensors | One per column, detect the played column |
+| Series resistors | Required for reliable photoelectric detection |
+| External power supply | Powers the stepper motor and servo |
+| Connect 4 board | 7 × 6 grid with sensor holes at the top |
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -151,14 +153,6 @@ Team7/
 - Required libraries:
   - `AccelStepper` — stepper motor control
   - `ESP32Servo` — servo control
-  - `LiquidCrystal_I2C` *(or equivalent)* — LCD display
-
-### Clone the repository
-
-```bash
-git clone https://github.com/Integrated-Project-2-2026-UVic-UCC/Team7.git
-cd Team7/programming
-```
 
 ### Flash to ESP32
 
@@ -167,146 +161,42 @@ cd Team7/programming
 3. Connect ESP32 via USB
 4. Upload
 
-> ⚠️ Ensure all hardware (sensors, motors, endstop) is connected and the dispenser is homed to the endstop before powering on.
+> **Warning:** Make sure the sensors, motor, and servo are connected before powering on, and that the external power supply for the motor and servo is on.
 
 ---
 
-## 📊 Current Status
+## Current Status
 
 | Phase | Task | Status |
 |-------|------|--------|
-| 1 | Initial design & planning | ✅ Done |
-| 2 | Component procurement | ✅ Done |
-| 3 | 3D printing — dispenser & mechanical parts | ✅ Done |
-| 3 | Electronics wiring & assembly | ✅ Done |
-| 3 | Individual component testing (sensors, motor, servo) | ✅ Done |
-| 4 | Full system integration | 🔄 In progress |
-| 4 | Software validation on real hardware | 🔄 In progress |
-| 5 | Final calibration & demo | ⏳ Pending |
+| 1 | Initial design and planning | Done |
+| 2 | Component procurement | Done |
+| 3 | 3D printing — dispenser and mechanical parts | Done |
+| 3 | Electronics wiring and assembly | Done |
+| 3 | Individual component testing (sensors, motor, servo) | Done |
+| 4 | Full system integration | Done |
+| 4 | Software validation on real hardware | Done |
+| 5 | Final calibration and demo | Done |
 
 ---
 
-## 👥 Team
+## Team
 
-| Name | Role | GitHub |
-|------|------|--------|
-| Arnau Arcarons | Project Manager | [@arnauarca](https://github.com/arnauarca) |
-| Pau Vila | Mechanical Leader | — |
-| Victor Ruiz | Electronics Leader | — |
-| Albert Llimós | Programming Leader | — |
+| Name | Role |
+|------|------|
+| Arnau Arcarons | Project Manager |
+| Pau Vila | Mechanical Leader |
+| Victor Ruiz | Electronics Leader |
+| Albert Llimós | Programming Leader |
 
-> 📌 *Project supervised by Moisès and Clara, faculty of Mechatronics Engineering at UVic-UCC.*
+> Project supervised by Moisès and Clara, faculty of Mechatronics Engineering at UVic-UCC.
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the **GNU General Public License v3.0**.
 See the [`LICENSE`](LICENSE) file for full details.
 
----
 
-<div align="center">
-  <sub>Built with ⚙️ by Team 7 · UVic-UCC Mechatronics Engineering · 2026</sub>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# 🤖 Autonomous Connect 4 Machine
-
-University academic project focused on designing and developing a fully autonomous physical **Connect 4 (4 in a Row)** machine capable of playing against a human opponent.
-
-The system will combine:
-
-- Physical mechanical design  
-- Raspberry Pi control system  
-- Artificial Intelligence (Minimax + Alpha-Beta pruning)  
-- Automatic piece recovery and mechanical sorting  
-- Full autonomous game reset  
-
----
-
-# 🎯 Project Objective
-
-To build a fully autonomous machine capable of:
-
-1. Detecting the board state  
-2. Computing the optimal move  
-3. Physically executing the move  
-4. Recovering all pieces at the end of the match  
-5. Mechanically sorting the pieces (without sensors)  
-6. Automatically preparing for the next game  
-
-The project is currently in the **early conceptual stage**.
-
----
-
-# 🏗 System Architecture (Conceptual)
-
-## Main Subsystems
-
-### 1️⃣ Mechanical System
-- Vertical 7x6 board  
-- X-axis moving head mechanism  
-- Piece drop system  
-- Bottom trap door for board clearing  
-- Fully mechanical piece sorting system (no sensors)  
-- Vertical storage reservoirs  
-
-### 2️⃣ Electronics
-- Raspberry Pi (model TBD)  
-- Stepper motor for lateral movement  
-- Motor driver  
-- Servo motor for piece release  
-- Endstops for homing  
-- Separate power supply for logic and motors  
-
-### 3️⃣ Software
-- AI engine  
-- Game logic  
-- Motion control  
-- Detection system (camera or mechanical detection – TBD)
-
----
-
-# 🧠 Artificial Intelligence
-
-The AI uses:
-
-- Minimax algorithm  
-- Alpha-Beta pruning  
-- Heuristic evaluation  
-- Center-column prioritization  
-- Immediate win/block detection  
-
-The algorithm is optimized to run efficiently on a Raspberry Pi.
-
----
-
-# 📁 Project Structure
 
