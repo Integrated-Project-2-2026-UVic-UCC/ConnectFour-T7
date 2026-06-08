@@ -23,7 +23,7 @@
 // SENSOR PINS
 // One photocell per column. Index 0 = column 1 ... index 6 = column 7.
 #define NUM_SENSORS 7
-const int sensors[NUM_SENSORS] = {14, 27, 26, 25, 33, 32, 35};
+const int sensors[NUM_SENSORS] = {13, 12, 14, 27, 26, 25, 33};
 
 // MECHANICAL SETTINGS
 #define STEPS_PER_MM       25    // 200 steps/rev divided by 8 mm lead
