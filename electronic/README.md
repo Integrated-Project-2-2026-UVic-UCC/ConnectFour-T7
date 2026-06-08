@@ -1,101 +1,57 @@
 # Electronics
 
-This folder contains the electrical documentation of the autonomous Connect Four robot.
+This folder contains the final electronic documentation of the autonomous Connect Four robot developed by Team 7 for the Integrated Projects II course at UVic-UCC.
 
-The electronics system is responsible for controlling the robot movement, detecting the player moves, actuating the piece release mechanism, and connecting all sensors and actuators to the main controller.
+The electronic system connects the control software with the physical hardware of the machine. It is responsible for reading the player move sensors, controlling the stepper motor driver, activating the piece dispenser servo, and managing the basic electrical interface between all components.
 
-## Current contents
+---
 
-At this stage, this folder includes:
+## Folder Contents
 
-- `ESP32_Datasheet.pdf`  
-  Official datasheet of the ESP32 development board used as the main controller.
+This folder includes the main electrical schematic of the prototype and the datasheets of the key electronic components used in the system.
 
-- `easyeda_schematic.pdf` / `easyeda_schematic.png`  
-  Electrical schematic designed using EasyEDA.
+| File | Description |
+|---|---|
+| `IP_2.pdf` | Final electrical schematic of the system, created with EasyEDA. It shows the connections between the ESP32 controller, sensors, stepper driver, servo motor, power supply and common ground. |
+| `A1.3 esp32-s3_datasheet_en.pdf` | Datasheet of the ESP32-S3 microcontroller, used as the main controller reference for GPIO, electrical characteristics and pin functions. |
+| `A4988.PDF` | Datasheet/reference document for the A4988 stepper motor driver used to control the NEMA17 stepper motor. |
+| `README.md` | Documentation file describing the purpose and contents of the electronics folder. |
 
-## System overview
+---
 
-The electrical system is based on an ESP32 microcontroller, which manages the main inputs and outputs of the robot.
+## Electronic System Overview
 
-The main connected elements are:
+The electronic system is centred on the ESP32 microcontroller. The ESP32 receives input signals from the column sensors and sends control signals to the actuators of the machine.
 
-- ESP32 development board
-- IR sensors for detecting the column used by the human player
-- Limit switch for homing and position reference
-- Stepper motor driver for horizontal movement
-- NEMA17 stepper motor
-- 9g servo motor for the piece release mechanism
-- External power supply
-- Common ground connection between control and power circuits
+The system performs the following main tasks:
 
-## Main functions
+1. Detecting the column selected by the human player.
+2. Sending STEP and DIR signals to the A4988 stepper motor driver.
+3. Moving the NEMA17 stepper motor along the horizontal axis.
+4. Activating the 9 g servo motor to release one piece.
+5. Reading the limit switch used as a mechanical reference.
+6. Coordinating the electrical behaviour of the full prototype.
 
-The electronics system performs the following tasks:
+---
 
-1. Read the IR sensors to detect where the player drops a piece.
-2. Use the limit switch to calibrate the initial position of the carriage.
-3. Control the stepper motor driver to move the dispenser horizontally.
-4. Activate the servo motor to release a game piece.
-5. Provide the electrical interface between the software, sensors, and actuators.
+## Main Electronic Components
 
-## Electrical schematic
+| Component | Function | Interface |
+|---|---|---|
+| ESP32 / ESP32-S3 | Main controller of the system | GPIO / PWM / Serial |
+| A4988 stepper motor driver | Controls the NEMA17 stepper motor | STEP / DIR |
+| NEMA17 stepper motor | Moves the dispenser horizontally | Driven by A4988 |
+| 9 g servo motor | Opens and closes the dispenser gate | PWM |
+| Column sensors | Detect the column used by the human player | Digital inputs |
+| Limit switch | Provides a reference position for the axis | Digital input |
+| External power supply | Powers the motor and actuator system | Power input |
+| Common ground | Shared electrical reference | GND |
 
-The schematic was created with EasyEDA and shows the connection between the ESP32, sensors, actuator signals, driver inputs, and power lines.
+---
 
-The schematic includes:
+## Electrical Schematic
 
-- ESP32 pin connections
-- Sensor signal inputs
-- Servo signal output
-- Stepper driver control pins
-- Power supply connections
-- Ground reference connections
-
-## Notes
-
-All components must share a common ground to ensure correct signal reference between the ESP32, sensors, servo motor, and motor driver.
-
-The ESP32 operates with 3.3 V logic, so all input and output signals must be compatible with this voltage level. External power is required for the stepper motor and may also be required for the servo motor, depending on current consumption.
-
-## Files to be added
-
-The following files should be added in future updates:
-
-- Final version of the electrical schematic in PDF format
-- EasyEDA source file
-- Wiring diagram
-- Pinout table
-- Bill of Materials for electronics
-- Power distribution diagram
-- Photos of the real wiring
-- Datasheets of the main electronic components
-- Short explanation of the final electrical assembly
-- Safety notes and electrical precautions
-
-## Recommended folder structure
+The electrical schematic is provided in:
 
 ```text
-electronics/
-│
-├── README.md
-├── datasheets/
-│   ├── ESP32_Datasheet.pdf
-│   ├── TMC2209_Datasheet.pdf
-│   ├── NEMA17_Datasheet.pdf
-│   ├── Servo_9g_Datasheet.pdf
-│   └── IR_Sensor_Datasheet.pdf
-│
-├── schematics/
-│   ├── easyeda_schematic.pdf
-│   ├── easyeda_schematic.png
-│   └── easyeda_project_file.json
-│
-├── wiring/
-│   ├── wiring_diagram.pdf
-│   └── pinout_table.md
-│
-└── photos/
-    ├── electronics_assembly.jpg
-    ├── esp32_connections.jpg
-    └── final_wiring.jpg
+IP_2.pdf
